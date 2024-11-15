@@ -20,13 +20,15 @@ public class Register extends AppCompatActivity {
     private Button registerButton;
     private TextView loginText;
 
-    private static final Pattern EMAIL_PATTERN = Pattern.compile("[a-z0-9._%+-]+@[a-z0-9.]{6,}");
+    // Updated email pattern to match a typical format for validation
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Reference XML views with correct IDs
         usernameEditText = findViewById(R.id.usernameInput);
         emailEditText = findViewById(R.id.emailInput);
         passwordEditText = findViewById(R.id.passwordInput);
@@ -34,50 +36,34 @@ public class Register extends AppCompatActivity {
         registerButton = findViewById(R.id.registerButton);
         loginText = findViewById(R.id.loginText);
 
-        registerButton.setOnClickListener(v ->
-        {
+        registerButton.setOnClickListener(v -> {
             String username = usernameEditText.getText().toString();
             String email = emailEditText.getText().toString();
             String password = passwordEditText.getText().toString();
             String confirmPassword = confirmPasswordInput.getText().toString();
 
-            if (username.isEmpty())
-            {
+            if (username.isEmpty()) {
                 usernameEditText.setError("Empty!!");
                 usernameEditText.requestFocus();
-            }
-            else if (!MainActivity.USERNAME_PATTERN.matcher(username).matches())
-            {
+            } else if (!MainActivity.USERNAME_PATTERN.matcher(username).matches()) {
                 Toast.makeText(this, "Username must be 4-20 characters with no spaces", Toast.LENGTH_SHORT).show();
                 usernameEditText.requestFocus();
-            }
-            else if (email.isEmpty())
-            {
+            } else if (email.isEmpty()) {
                 emailEditText.setError("Empty!!");
                 emailEditText.requestFocus();
-            }
-            else if (!EMAIL_PATTERN.matcher(email).matches())
-            {
+            } else if (!EMAIL_PATTERN.matcher(email).matches()) {
                 emailEditText.setError("Invalid email format");
                 emailEditText.requestFocus();
-            }
-            else if (password.isEmpty())
-            {
+            } else if (password.isEmpty()) {
                 passwordEditText.setError("Empty!!");
                 passwordEditText.requestFocus();
-            }
-            else if (!MainActivity.PASSWORD_PATTERN.matcher(password).matches())
-            {
+            } else if (!MainActivity.PASSWORD_PATTERN.matcher(password).matches()) {
                 Toast.makeText(this, "Password must be at least 6 characters and contain letters", Toast.LENGTH_LONG).show();
                 passwordEditText.requestFocus();
-            }
-            else if (!password.equals(confirmPassword))
-            {
+            } else if (!password.equals(confirmPassword)) {
                 confirmPasswordInput.setError("Passwords do not match");
                 confirmPasswordInput.requestFocus();
-            }
-            else
-            {
+            } else {
                 Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(Register.this, MainActivity.class);
                 startActivity(intent);
@@ -85,8 +71,7 @@ public class Register extends AppCompatActivity {
             }
         });
 
-        loginText.setOnClickListener(v ->
-        {
+        loginText.setOnClickListener(v -> {
             Intent intent = new Intent(Register.this, MainActivity.class);
             startActivity(intent);
             finish();
