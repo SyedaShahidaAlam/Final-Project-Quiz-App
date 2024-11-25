@@ -13,6 +13,33 @@
         android:theme="@style/Theme.FinalProjectQuizApp"
         tools:targetApi="31">
         <activity
+            android:name=".RankListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".QuizActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DifficultyLevelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CatagoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DeleteQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ViewQuestionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InsertQuestionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ForgotPasswordActivity"
             android:exported="false" />
         <activity
@@ -33,4 +60,5 @@
     </application>
 
 </manifest>
+
 
