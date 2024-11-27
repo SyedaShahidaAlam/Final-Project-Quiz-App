@@ -544,11 +544,11 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "QuizApp.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     private static final String TABLE_QUESTIONS = "questions";
     private static final String COLUMN_ID = "id";
-    private static final String COLUMN_QUESTION_TEXT = "question";
+    public static final String COLUMN_QUESTION_TEXT = "question";
     private static final String COLUMN_OPTION1 = "option1";
     private static final String COLUMN_OPTION2 = "option2";
     private static final String COLUMN_OPTION3 = "option3";
@@ -562,34 +562,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_EMAIL = "email";
     private static final String COLUMN_PASSWORD = "password";
 
+    // Catagory Table
+    private static final String TABLE_CATEGORY = "category";
+    public static final String COL_CATEGORY_NAME = "categoryName";
+    public static final String COL_CATEGORY_IMAGE_URI = "categoryImage";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String createTable = "CREATE TABLE " + TABLE_QUESTIONS + " (" +
+
+        db.execSQL("CREATE TABLE " + TABLE_QUESTIONS + " (" +
                 COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_QUESTION_TEXT + " TEXT, " +
                 COLUMN_OPTION1 + " TEXT, " +
                 COLUMN_OPTION2 + " TEXT, " +
                 COLUMN_OPTION3 + " TEXT, " +
                 COLUMN_OPTION4 + " TEXT, " +
-                COLUMN_ANSWER + " TEXT)";
-        db.execSQL(createTable);
+                COL_CATEGORY_NAME + " TEXT, " +
+                COLUMN_ANSWER + " TEXT)");
 
-        String createUsersTable = "CREATE TABLE " + TABLE_USERS + " (" +
+        db.execSQL("CREATE TABLE " + TABLE_USERS + " (" +
                 COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_USERNAME + " TEXT UNIQUE, " +
                 COLUMN_EMAIL + " TEXT, " +
-                COLUMN_PASSWORD + " TEXT)";
-        db.execSQL(createUsersTable);
+                COLUMN_PASSWORD + " TEXT)");
+
+        db.execSQL("CREATE TABLE " + TABLE_CATEGORY + " (" +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COL_CATEGORY_NAME + " TEXT, " +
+                COL_CATEGORY_IMAGE_URI + " BLOB)");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUESTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         onCreate(db);
     }
 
@@ -600,7 +611,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_USERNAME, username.trim()); // Trim input
         values.put(COLUMN_EMAIL, email.trim());       // Trim input
         values.put(COLUMN_PASSWORD, password.trim()); // Trim input
-
         long result = db.insert(TABLE_USERS, null, values);
         db.close();
         return result != -1;
@@ -631,7 +641,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Insert a question into the database
-    public boolean insertQuestion(String question, String option1, String option2, String option3, String option4, String answer) {
+    public boolean insertQuestion(String question, String option1, String option2, String option3, String option4, String answer, String catagory) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(COLUMN_QUESTION_TEXT, question);
@@ -640,34 +650,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_OPTION3, option3);
         values.put(COLUMN_OPTION4, option4);
         values.put(COLUMN_ANSWER, answer);
-
+        values.put(COL_CATEGORY_NAME, catagory);
         long result = db.insert(TABLE_QUESTIONS, null, values);
         db.close();
         return result != -1;
     }
 
     // Retrieve all questions
-    public List<Question> getAllQuestions() {
-        List<Question> questionList = new ArrayList<>();
+    Cursor getAllQuestions() {
         SQLiteDatabase db = this.getReadableDatabase();
-
-        String query = "SELECT * FROM " + TABLE_QUESTIONS;
-        Cursor cursor = db.rawQuery(query, null);
-
-        if (cursor.moveToFirst()) {
-            do {
-                int id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
-                String question = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_TEXT));
-                String answer = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANSWER));
-                questionList.add(new Question(id, question, answer));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        db.close();
-
-        return questionList;
+        return db.rawQuery("SELECT * FROM " + TABLE_QUESTIONS, null);
     }
+    Cursor getAllQuestionsByCatagory(String categoryName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery(
+                "SELECT * FROM " + TABLE_QUESTIONS + " WHERE " + COL_CATEGORY_NAME + " = ?",
+                new String[]{categoryName}
+        );
+    }
+
 
     // Get a question by its ID
     public Question getQuestionById(int id) {
@@ -714,12 +715,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     // Delete a question from the database
     public boolean deleteQuestion(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         int rowsAffected = db.delete(TABLE_QUESTIONS, COLUMN_ID + " = ?", new String[]{String.valueOf(id)});
         db.close();
-
         return rowsAffected > 0;
     }
+
+    public boolean insertCatagory(String categoryName, byte[] imageByteArray) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COL_CATEGORY_NAME, categoryName);
+        values.put(COL_CATEGORY_IMAGE_URI, imageByteArray);
+        long result = db.insert(TABLE_CATEGORY, null, values);
+        db.close();
+        return result != -1;
+    }
+
+    // For set spinner in insert question
+    public Cursor getAllCategoriesName() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT categoryName FROM " + TABLE_CATEGORY, null);
+    }
+    public Cursor getAllCatagory() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_CATEGORY, null);
+    }
+    public Cursor getCategoryByName(String categoryName) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.rawQuery("SELECT * FROM " + TABLE_CATEGORY + " WHERE " + COL_CATEGORY_NAME + " = ?", new String[]{categoryName});
+    }
+
+    public boolean deleteCategory(String categoryName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        int rowsDeleted = db.delete(TABLE_CATEGORY, COL_CATEGORY_NAME + " = ?", new String[]{categoryName});
+        db.close();
+        return rowsDeleted !=-1;
+    }
+
 }
 
 

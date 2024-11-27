@@ -244,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                     boolean isLoggedIn = databaseHelper.loginUser(username, password);
                     if (isLoggedIn) {
                         Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(MainActivity.this, CatagoryActivity.class);
+                        Intent intent = new Intent(MainActivity.this, QuestionCatagoryActivity.class);
                         startActivity(intent);
                     } else {
                         Toast.makeText(this, "Invalid Username or Password!", Toast.LENGTH_SHORT).show();
