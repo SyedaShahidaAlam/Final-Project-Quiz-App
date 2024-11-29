@@ -1,91 +1,62 @@
-//package com.example.finalprojectquizapp;
-//
-//import android.os.Bundle;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.recyclerview.widget.LinearLayoutManager;
-//import android.annotation.SuppressLint;
-//import android.os.Bundle;
-//
-//import androidx.appcompat.app.AppCompatActivity;
-//import androidx.recyclerview.widget.LinearLayoutManager;
-//import androidx.recyclerview.widget.RecyclerView;
-//
-//import com.example.finalprojectquizapp.DatabaseHelper;
-//import com.example.finalprojectquizapp.Question;
-//import Adapter.QuestionAdapter;
-//import com.example.finalprojectquizapp.R;
-//
-//import java.util.List;
-//
-//public class ViewQuestionActivity extends AppCompatActivity {
-//
-//    private RecyclerView recyclerViewQuestions;
-//    private QuestionAdapter questionAdapter;
-//    private DatabaseHelper databaseHelper;
-//
-//    @SuppressLint("MissingInflatedId")
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_view_question);
-//
-//        recyclerViewQuestions = findViewById(R.id.recyclerViewQuestions);
-//        recyclerViewQuestions.setLayoutManager(new LinearLayoutManager(this));
-//
-//        databaseHelper = new DatabaseHelper(this);
-//        List<Question> questionList = databaseHelper.getAllQuestions();
-//
-//        questionAdapter = new QuestionAdapter(questionList);
-//        recyclerViewQuestions.setAdapter(questionAdapter);
-//    }
-//}
-//
-//
-
-
-
-
 package com.example.finalprojectquizapp;
 
 import android.database.Cursor;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
+import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finalprojectquizapp.DatabaseHelper;
-import com.example.finalprojectquizapp.Question;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import Adapter.QuestionAdapter;
+import Database.DatabaseHelper;
 
 public class ViewQuestionActivity extends AppCompatActivity {
 
     private DatabaseHelper databaseHelper;
     private Cursor cursor;
+    private QuestionAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view_question);
-        String catagory = getIntent().getStringExtra("catagoryName");
+        setContentView(R.layout.activity_view_question2);
+
         databaseHelper = new DatabaseHelper(this);
-        //cursor = databaseHelper.getAllQuestionsByCatagory(catagory);
-        cursor = databaseHelper.getAllQuestions();
+        // Retrieve the passed category name
+        String categoryName = getIntent().getStringExtra(QuestionCatagoryActivity.EXTRA_CATEGORY_NAME);
+
+        //String categoryName = "cse"; // Replace with dynamic category if needed
+        cursor = databaseHelper.getAllQuestionsByCatagory(categoryName);
+
         RecyclerView recyclerView = findViewById(R.id.listViewQuestions);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        QuestionAdapter adapter = new QuestionAdapter(this, cursor);
-
+        adapter = new QuestionAdapter(this, cursor, false); // Initially, not submitted
         recyclerView.setAdapter(adapter);
 
+        Button submitButton = findViewById(R.id.btn_submit);
+        submitButton.setOnClickListener(v -> {
+            adapter.setSubmitted(true); // Mark as submitted to show answers
 
+            int totalCorrect = 0;
+            for (int i = 0; i < cursor.getCount(); i++) {
+                if (adapter.getCorrectAnswers().get(i, false)) { // Default to false if not answered
+                    totalCorrect++;
+                }
+            }
 
+            Toast.makeText(this, "Total correct answers: " + totalCorrect, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (cursor != null) {
+            cursor.close(); // Close the cursor to avoid memory leaks
+        }
     }
 }
-
-

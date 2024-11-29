@@ -13,13 +13,10 @@
         android:theme="@style/Theme.FinalProjectQuizApp"
         tools:targetApi="31">
         <activity
-            android:name=".QuestionActivity"
-            android:exported="false" />
-        <activity
             android:name=".QuestionCatagoryActivity"
             android:exported="false" />
         <activity
-            android:name=".QuestionCatagory"
+            android:name=".ViewQuestionActivity"
             android:exported="false" />
         <activity
             android:name=".DeleteCatagoryActivity"
@@ -44,9 +41,6 @@
             android:exported="false" />
         <activity
             android:name=".UpdateQuestionActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ViewQuestionActivity"
             android:exported="false" />
         <activity
             android:name=".InsertQuestionActivity"

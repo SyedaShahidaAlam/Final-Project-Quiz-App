@@ -530,7 +530,7 @@
 
 // properly work login and regester part with insert,view,update,delete question
 
-package com.example.finalprojectquizapp;
+package Database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -538,10 +538,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.finalprojectquizapp.Question;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
+
 
     private static final String DATABASE_NAME = "QuizApp.db";
     private static final int DATABASE_VERSION = 3;
@@ -549,11 +549,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_QUESTIONS = "questions";
     private static final String COLUMN_ID = "id";
     public static final String COLUMN_QUESTION_TEXT = "question";
-    private static final String COLUMN_OPTION1 = "option1";
-    private static final String COLUMN_OPTION2 = "option2";
-    private static final String COLUMN_OPTION3 = "option3";
-    private static final String COLUMN_OPTION4 = "option4";
-    private static final String COLUMN_ANSWER = "answer";
+    public static final String COLUMN_OPTION1 = "option1";
+    public static final String COLUMN_OPTION2 = "option2";
+    public static final String COLUMN_OPTION3 = "option3";
+    public static final String COLUMN_OPTION4 = "option4";
+    public static final String COLUMN_ANSWER = "answer";
 
     // Users Table
     private static final String TABLE_USERS = "users";
@@ -563,7 +563,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String COLUMN_PASSWORD = "password";
 
     // Catagory Table
-    private static final String TABLE_CATEGORY = "category";
+    public static final String TABLE_CATEGORY = "category";
     public static final String COL_CATEGORY_NAME = "categoryName";
     public static final String COL_CATEGORY_IMAGE_URI = "categoryImage";
 
@@ -657,11 +657,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     // Retrieve all questions
-    Cursor getAllQuestions() {
+    public Cursor getAllQuestions() {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery("SELECT * FROM " + TABLE_QUESTIONS, null);
     }
-    Cursor getAllQuestionsByCatagory(String categoryName) {
+    public  Cursor getAllQuestionsByCatagory(String categoryName) {
         SQLiteDatabase db = this.getReadableDatabase();
         return db.rawQuery(
                 "SELECT * FROM " + TABLE_QUESTIONS + " WHERE " + COL_CATEGORY_NAME + " = ?",

@@ -37,6 +37,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import Database.DatabaseHelper;
+
 public class UpdateQuestionActivity extends AppCompatActivity {
 
     private EditText questionIdInput, questionInput, option1Input, option2Input, option3Input, option4Input, correctAnswerInput;

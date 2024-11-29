@@ -213,6 +213,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.regex.Pattern;
 
+import Database.DatabaseHelper;
+
 public class Register extends AppCompatActivity {
 
     private EditText usernameEditText;

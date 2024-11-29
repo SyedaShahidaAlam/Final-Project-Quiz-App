@@ -13,7 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.finalprojectquizapp.DatabaseHelper;
+import Database.DatabaseHelper;
 import com.example.finalprojectquizapp.R;
 
 public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.CatagoryViewHolder> {
@@ -22,9 +22,9 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.Catago
     private Cursor cursor;
     private OnItemClickListener listener;
 
-    // Interface for item click listener
+    // Updated Interface for item click listener to pass category name
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(String categoryName);
     }
 
     // Set the click listener
@@ -42,7 +42,7 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.Catago
     @Override
     public CatagoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.catagory_custom, parent, false);
-        return new CatagoryViewHolder(view, listener);
+        return new CatagoryViewHolder(view);
     }
 
     @Override
@@ -58,6 +58,13 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.Catago
             // Set data to views
             holder.catagoryImageView.setImageBitmap(bitmap);
             holder.nameTextView.setText(name);
+
+            // Set click listener to pass the category name
+            holder.itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onItemClick(name); // Pass the category name
+                }
+            });
         }
     }
 
@@ -71,20 +78,10 @@ public class CatagoryAdapter extends RecyclerView.Adapter<CatagoryAdapter.Catago
         TextView nameTextView;
         ImageView catagoryImageView;
 
-        public CatagoryViewHolder(@NonNull View itemView, OnItemClickListener listener) {
+        public CatagoryViewHolder(@NonNull View itemView) {
             super(itemView);
             nameTextView = itemView.findViewById(R.id.tv_Catagory_Name);
             catagoryImageView = itemView.findViewById(R.id.iv_catagory_image);
-
-            // Set click listener for the entire item
-            itemView.setOnClickListener(v -> {
-                if (listener != null) {
-                    int position = getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION) {
-                        listener.onItemClick(position);
-                    }
-                }
-            });
         }
     }
 }

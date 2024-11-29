@@ -38,6 +38,8 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import Database.DatabaseHelper;
+
 public class DeleteQuestionActivity extends AppCompatActivity {
 
     private EditText questionIdInput;

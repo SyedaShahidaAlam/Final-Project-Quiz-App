@@ -194,6 +194,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.regex.Pattern;
 
+import Database.DatabaseHelper;
+
 public class MainActivity extends AppCompatActivity {
 
     public static final Pattern USERNAME_PATTERN = Pattern.compile("[a-zA-Z0-9\\S]{4,20}");

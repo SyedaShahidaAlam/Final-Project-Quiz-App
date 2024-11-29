@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".QuestionCatagoryActivity">
+    android:padding="8dp"
+    tools:context=".ViewQuestionActivity">
 
     <!-- Toolbar -->
     <LinearLayout
@@ -37,16 +37,35 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="30dp"
         android:layout_below="@id/linearLayout"
-        >
+        android:id="@+id/recycleviewleyout">
+        <!-- RecyclerView for displaying questions -->
         <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/listViewQuestions"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/catagoryRecyclerView"
-            />
+            android:layout_height="match_parent"
+            android:layout_marginTop="8dp"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="1dp" />
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="8dp"
+        android:layout_alignParentBottom="true"
+        >
 
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:id="@+id/btn_submit"
+            android:backgroundTint="@color/button_blue"/>
 
+    </LinearLayout>
 </RelativeLayout>

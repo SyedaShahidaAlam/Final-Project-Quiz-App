@@ -1,30 +1,3 @@
-//package com.example.finalprojectquizapp;
-//
-//public class Question {
-//
-//    private String questionText;
-//    private String answer;
-//
-//    public Question(int id, String questionText, String answer) {
-//        this.questionText = questionText;
-//        this.answer = answer;
-//    }
-//
-//    public Question(int id, String questionText, String option1, String option2, String option3, String option4, String answer) {
-//    }
-//
-//    public String getQuestionText() {
-//        return questionText;
-//    }
-//
-//    public String getAnswer() {
-//        return answer;
-//    }
-//}
-
-
-
-
 
 package com.example.finalprojectquizapp;
 
